@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Lightbug.GrabIt
 {
@@ -13,6 +14,8 @@ public class GrabObjectProperties{
 
 }
 
+
+// [RequireComponent(typeof(PlayerInput))]
 public class GrabIt : MonoBehaviour {
 
 	[Header("Input")]
@@ -85,51 +88,55 @@ public class GrabIt : MonoBehaviour {
 		m_lineRenderer = GetComponent<LineRenderer>();
 	}
 
+	public void OnInteract() {
+		Debug.Log("this should be called.");
+	}
+
 	
 	void Update()
 	{
-		if( m_grabbing )
-		{
+		// if( m_grabbing )
+		// {
 
-			m_targetDistance += Input.GetAxisRaw("Mouse ScrollWheel") * m_scrollWheelSpeed;			
-			m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
+		// 	m_targetDistance += Input.GetAxisRaw("Mouse ScrollWheel") * m_scrollWheelSpeed;			
+		// 	m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
 
-			m_targetPos = m_transform.position + m_transform.forward * m_targetDistance;
+		// 	m_targetPos = m_transform.position + m_transform.forward * m_targetDistance;
 						
-			if(!m_isHingeJoint){
-				if(Input.GetKey(m_rotatePitchPosKey) || Input.GetKey(m_rotatePitchNegKey) || Input.GetKey(m_rotateYawPosKey) || Input.GetKey(m_rotateYawNegKey)){
-					m_targetRB.constraints = RigidbodyConstraints.None;
-				}else{
-					m_targetRB.constraints = m_grabProperties.m_constraints;
-				}
-			}
+		// 	if(!m_isHingeJoint){
+		// 		if(Input.GetKey(m_rotatePitchPosKey) || Input.GetKey(m_rotatePitchNegKey) || Input.GetKey(m_rotateYawPosKey) || Input.GetKey(m_rotateYawNegKey)){
+		// 			m_targetRB.constraints = RigidbodyConstraints.None;
+		// 		}else{
+		// 			m_targetRB.constraints = m_grabProperties.m_constraints;
+		// 		}
+		// 	}
 			
 
-			if( Input.GetMouseButtonUp(0) ){				
-				Reset();
-				m_grabbing = false;
-			}else if ( Input.GetMouseButtonDown(1) ){
-				m_applyImpulse = true;
-			}
+		// 	if( Input.GetMouseButtonUp(0) ){				
+		// 		Reset();
+		// 		m_grabbing = false;
+		// 	}else if ( Input.GetMouseButtonDown(1) ){
+		// 		m_applyImpulse = true;
+		// 	}
 
 			
-		}
-		else
-		{
+		// }
+		// else
+		// {
 
-			if(Input.GetMouseButtonDown(0))
-			{
-				RaycastHit hitInfo;
-				if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
-				{
-					Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
-					if(rb != null){							
-						Set( rb , hitInfo.distance);						
-						m_grabbing = true;
-					}
-				}
-			}
-		}
+		// 	if(Input.GetMouseButtonDown(0))
+		// 	{
+		// 		RaycastHit hitInfo;
+		// 		if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
+		// 		{
+		// 			Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
+		// 			if(rb != null){							
+		// 				Set( rb , hitInfo.distance);						
+		// 				m_grabbing = true;
+		// 			}
+		// 		}
+		// 	}
+		// }
 		
 	}
 	
@@ -196,17 +203,17 @@ public class GrabIt : MonoBehaviour {
 
 	void Rotate()
 	{
-		if(Input.GetKey(m_rotatePitchPosKey)){
-			m_targetRB.AddTorque(  m_transform.right * m_angularSpeed );			
-		}else if(Input.GetKey(m_rotatePitchNegKey)){
-			m_targetRB.AddTorque(  - m_transform.right * m_angularSpeed );
-		}
+		// if(Input.GetKey(m_rotatePitchPosKey)){
+		// 	m_targetRB.AddTorque(  m_transform.right * m_angularSpeed );			
+		// }else if(Input.GetKey(m_rotatePitchNegKey)){
+		// 	m_targetRB.AddTorque(  - m_transform.right * m_angularSpeed );
+		// }
 
-		if(Input.GetKey(m_rotateYawPosKey)){
-			m_targetRB.AddTorque( - m_transform.up * m_angularSpeed );
-		}else if(Input.GetKey(m_rotateYawNegKey)){
-			m_targetRB.AddTorque( m_transform.up * m_angularSpeed );
-		}
+		// if(Input.GetKey(m_rotateYawPosKey)){
+		// 	m_targetRB.AddTorque( - m_transform.up * m_angularSpeed );
+		// }else if(Input.GetKey(m_rotateYawNegKey)){
+		// 	m_targetRB.AddTorque( m_transform.up * m_angularSpeed );
+		// }
 	}
 	
 	void FixedUpdate()
