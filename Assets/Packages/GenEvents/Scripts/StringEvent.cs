@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Plugins.PanettoneGames.GenEvents
+namespace PanettoneGames.GenEvents
 {
     //String
     [CreateAssetMenu(fileName = "New String Event", menuName = "Game Events/String Event")]

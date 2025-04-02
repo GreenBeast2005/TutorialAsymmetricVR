@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Plugins.PanettoneGames.GenEvents
+namespace PanettoneGames.GenEvents
 {
     //Void
     [CreateAssetMenu(fileName = "New Void Event", menuName = "Game Events/Void Event")]

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Plugins.PanettoneGames.GenEvents
+namespace PanettoneGames.GenEvents
 {
     public class GameObjectEventListener : BaseGameEventListener<GameObject, GameObjectEvent>
     {

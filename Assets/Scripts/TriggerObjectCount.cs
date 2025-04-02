@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using PanettoneGames.GenEvents;
 
 public class TriggerobjectCount : MonoBehaviour
 {
+    [Header("Hookup for Tutorial Manager")]
+    public int tutorialID = 0;
+    public IntEvent tutorialEvents;
     public bool debugMessages = false;
     [Header("Once you hit this count the object will perform its function")]
     public int targetCount = 3;
@@ -20,6 +24,7 @@ public class TriggerobjectCount : MonoBehaviour
 
         if(GetObjectCount() >= targetCount) {
             Debug.Log("You got them all NICE!");
+            tutorialEvents.Raise(tutorialID);
         }
     }
 
