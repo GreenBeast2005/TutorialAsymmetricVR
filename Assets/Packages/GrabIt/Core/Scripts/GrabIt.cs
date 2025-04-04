@@ -92,52 +92,57 @@ public class GrabIt : MonoBehaviour {
 		Debug.Log("this should be called.");
 	}
 
-	
-	void Update()
+	public void OnGrab(InputAction.CallbackContext context)
 	{
-		// if( m_grabbing )
-		// {
+		if(m_grabbing){				
+			Reset();
+			m_grabbing = false;
+		} else {
+			RaycastHit hitInfo;
+			if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
+			{
+				Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
+				if(rb != null){							
+					Set( rb , hitInfo.distance);						
+					m_grabbing = true;
+				}
+			}
+		}
+	}
 
-		// 	m_targetDistance += Input.GetAxisRaw("Mouse ScrollWheel") * m_scrollWheelSpeed;			
-		// 	m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
+	public void OnToss(InputAction.CallbackContext context)
+	{
+		if (m_grabbing){
+			m_applyImpulse = true;
+		}
+	}
 
-		// 	m_targetPos = m_transform.position + m_transform.forward * m_targetDistance;
+	public void OnScroll(InputAction.CallbackContext context)
+	{
+		if(m_grabbing) {
+			float rawScrollValue = Mathf.Sign(context.ReadValue<float>());
+
+			m_targetDistance += rawScrollValue * m_scrollWheelSpeed;			
+			m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
+		}
+	}
+
+
+    void Update()
+	{
+		if( m_grabbing )
+		{
+			m_targetPos = m_transform.position + m_transform.forward * m_targetDistance;
 						
-		// 	if(!m_isHingeJoint){
-		// 		if(Input.GetKey(m_rotatePitchPosKey) || Input.GetKey(m_rotatePitchNegKey) || Input.GetKey(m_rotateYawPosKey) || Input.GetKey(m_rotateYawNegKey)){
-		// 			m_targetRB.constraints = RigidbodyConstraints.None;
-		// 		}else{
-		// 			m_targetRB.constraints = m_grabProperties.m_constraints;
-		// 		}
-		// 	}
-			
+			// if(!m_isHingeJoint){
+			// 	if(Input.GetKey(m_rotatePitchPosKey) || Input.GetKey(m_rotatePitchNegKey) || Input.GetKey(m_rotateYawPosKey) || Input.GetKey(m_rotateYawNegKey)){
+			// 		m_targetRB.constraints = RigidbodyConstraints.None;
+			// 	}else{
+			// 		m_targetRB.constraints = m_grabProperties.m_constraints;
+			// 	}
+			// }
 
-		// 	if( Input.GetMouseButtonUp(0) ){				
-		// 		Reset();
-		// 		m_grabbing = false;
-		// 	}else if ( Input.GetMouseButtonDown(1) ){
-		// 		m_applyImpulse = true;
-		// 	}
-
-			
-		// }
-		// else
-		// {
-
-		// 	if(Input.GetMouseButtonDown(0))
-		// 	{
-		// 		RaycastHit hitInfo;
-		// 		if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
-		// 		{
-		// 			Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
-		// 			if(rb != null){							
-		// 				Set( rb , hitInfo.distance);						
-		// 				m_grabbing = true;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		
+		}
 	}
 	
 	void Set(Rigidbody target , float distance)
