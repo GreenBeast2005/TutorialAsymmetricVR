@@ -13,6 +13,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
 
     void Awake()
     {
+        ToastNotification.Show("Testing Shizzle");
         eventCompletion = new bool[eventCount];
         for(int i = 0; i < eventCount; i++) {
             eventCompletion[i] = false;
@@ -40,7 +41,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     public void OnEventRaised(int item) {
         eventCompletion[item] = true;
         if(isTutorialComplete()) {
-            Debug.Log("tutorial Complete");
+            ToastNotification.Show("Tutorial Complete!");
         }
     }
 }
