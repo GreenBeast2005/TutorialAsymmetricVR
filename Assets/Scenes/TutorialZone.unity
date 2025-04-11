@@ -131,6 +131,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5420857361349278248, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+        type: 3}
+      propertyPath: tutorialEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 77a6048f173686746a59883c60aa7f08,
+        type: 2}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
         type: 3}
       propertyPath: SprintSpeed
@@ -660,7 +666,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialEvents: {fileID: 11400000, guid: 77a6048f173686746a59883c60aa7f08, type: 2}
-  eventCount: 1
+  eventCount: 6
+  tutorialMessages:
+  - Welcome to the Tutorial!
+  - Lets get you moving, try using WASD or the Arrow Keys to walk around.
+  - Awesome now use the mouse to look around the room!
+  - Just in case there is weirdness.
 --- !u!1 &119044895
 GameObject:
   m_ObjectHideFlags: 0
@@ -3952,7 +3963,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 119044899}
   - {fileID: 1034935469}
@@ -4000,7 +4011,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1709963556}
   - {fileID: 2022129912}
@@ -4348,13 +4359,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _messagePrefab: {fileID: 7001399534701900153, guid: 993f3c0579c2ec243bd931e9e23be749,
     type: 3}
-  _showTimerRender: 1
+  _tutorialEvents: {fileID: 11400000, guid: 77a6048f173686746a59883c60aa7f08, type: 2}
+  _showTimerRender: 0
   _darkTheme: 1
   _minimumMessageTime: 3
   _margin: {x: 20, y: 20}
   _stopOnOver: 1
-  _hideOnClick: 1
-  _messageScreenPosition: 3
+  _hideOnClick: 0
+  _messageScreenPosition: 5
   _timerDirection: 0
 --- !u!1001 &2045187308
 PrefabInstance:
@@ -4585,6 +4597,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ObjectBin
+      objectReference: {fileID: 0}
+    - target: {fileID: 5702923924097200788, guid: 2674551023a13b54faab2e232d94cd60,
+        type: 3}
+      propertyPath: tutorialID
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5702923924097200788, guid: 2674551023a13b54faab2e232d94cd60,
         type: 3}

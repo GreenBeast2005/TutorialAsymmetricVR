@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using PanettoneGames.GenEvents;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -8,6 +9,12 @@ namespace StarterAssets
 {
 	public class StarterAssetsInputs : MonoBehaviour
 	{
+		[Header("Send Input as event to the TutorialManager")]
+		public IntEvent tutorialEvents;
+		public int moveEventID = 0;
+		private bool sentMove = false;
+		public int lookEventID = 1;
+		public int grabEventID = 2;
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
@@ -31,6 +38,10 @@ namespace StarterAssets
         }
         public void OnMove(InputAction.CallbackContext context)
 		{
+			if(!sentMove) {
+				tutorialEvents.Raise(moveEventID);
+			}
+			
 			MoveInput(context.ReadValue<Vector2>());
 		}
 
@@ -38,6 +49,7 @@ namespace StarterAssets
 		{
 			if(cursorInputForLook)
 			{
+				// tutorialEvents.Raise(lookEventID);
 				LookInput(context.ReadValue<Vector2>());
 			}
 		}

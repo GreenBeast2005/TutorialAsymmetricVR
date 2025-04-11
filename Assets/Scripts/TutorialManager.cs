@@ -5,16 +5,22 @@ using PanettoneGames.GenEvents;
 
 public class TutorialManager : MonoBehaviour, IGameEventListener<int>
 {
+    [Header("These are related to completing the tutorial")]
     public IntEvent tutorialEvents;
     public int eventCount;
+    public string[] tutorialMessages;
+    private int currentMessage = 0;
+    [Header("This is for the Notifications, so that this knows when a message is hidden and can respond")]
+    public static int ToastHideID = 1000;
 
     private bool[] eventCompletion;
+    public static bool messageOnScreen = false;
 
 
     void Awake()
     {
-        ToastNotification.Show("Welcome to the Tutorial!");
-        ToastNotification.Show("Let's start by getting you moving. Use WASD or the Arrow Keys.");
+        ToastNotification.Show(tutorialMessages[0]);
+        messageOnScreen = true;
         eventCompletion = new bool[eventCount];
         for(int i = 0; i < eventCount; i++) {
             eventCompletion[i] = false;
@@ -40,9 +46,19 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     }
 
     public void OnEventRaised(int item) {
-        eventCompletion[item] = true;
-        if(isTutorialComplete()) {
-            ToastNotification.Show("Tutorial Complete!");
+        if(item == ToastHideID && !messageOnScreen) {
+            if(currentMessage < tutorialMessages.Length - 1)
+                currentMessage++;
+            ToastNotification.Show(tutorialMessages[currentMessage], 1000);
+            messageOnScreen = true;
+        }else {
+            messageOnScreen = false;
+            ToastNotification.Hide();
+            eventCompletion[item] = true;
+            if(isTutorialComplete()) {
+                ToastNotification.Show("Tutorial Complete!");
+            }
         }
+        
     }
 }

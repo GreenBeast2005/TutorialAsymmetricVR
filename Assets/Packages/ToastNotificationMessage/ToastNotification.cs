@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using PanettoneGames.GenEvents;
 
 // State the position of the message on the screen.
 public enum MessageScreenPosition { TopLeft, TopCenter, TopRight, Center, BottomLeft, BottomCenter, BottomRight }
@@ -17,6 +18,9 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     // The prefab used to display messages. Please choose one prefab on root folder. You can also create your own message prefab
     public Transform _messagePrefab;
+    [Header("Here so that the TutorialManager knows when notifications are hidden")]
+    public IntEvent _tutorialEvents;
+    public static IntEvent tutorialEvents;
 
     // Public static variables accessible throughout the project
     // Be careful when changing them at runtime, as as static variables, this will override existing settings
@@ -60,6 +64,8 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
 
         // Assign public variables to their static counterparts
+        tutorialEvents = _tutorialEvents;
+
         messagePrefab = _messagePrefab;
         toastNotification = transform;
 
@@ -333,8 +339,14 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
             return;
         for (int i = 0; i < toastNotification.childCount; i++)
         {
-            if (toastNotification.GetChild(i).gameObject.activeSelf == true)
+            if (toastNotification.GetChild(i).gameObject.activeSelf == true) {
                 Destroy(toastNotification.GetChild(i).gameObject);
+                
+            }
+               
+        }
+        if(tutorialEvents != null && !TutorialManager.messageOnScreen) {
+            tutorialEvents.Raise(TutorialManager.ToastHideID);
         }
     }
 
