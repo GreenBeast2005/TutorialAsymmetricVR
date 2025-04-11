@@ -12,7 +12,6 @@ namespace StarterAssets
 		[Header("Send Input as event to the TutorialManager")]
 		public IntEvent tutorialEvents;
 		public int moveEventID = 0;
-		private bool sentMove = false;
 		public int lookEventID = 1;
 		public int grabEventID = 2;
 		[Header("Character Input Values")]
@@ -38,9 +37,8 @@ namespace StarterAssets
         }
         public void OnMove(InputAction.CallbackContext context)
 		{
-			if(!sentMove) {
-				tutorialEvents.Raise(moveEventID);
-			}
+
+			tutorialEvents.Raise(moveEventID);
 			
 			MoveInput(context.ReadValue<Vector2>());
 		}

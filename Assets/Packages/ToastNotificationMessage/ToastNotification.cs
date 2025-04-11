@@ -345,9 +345,9 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
             }
                
         }
-        if(tutorialEvents != null && !TutorialManager.messageOnScreen) {
-            tutorialEvents.Raise(TutorialManager.ToastHideID);
-        }
+        // if(tutorialEvents != null && !TutorialManager.messageOnScreen) {
+        //     tutorialEvents.Raise(TutorialManager.ToastHideID);
+        // }
     }
 
     #region Utilities Functions

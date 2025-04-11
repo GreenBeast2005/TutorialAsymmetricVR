@@ -14,13 +14,11 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     public static int ToastHideID = 1000;
 
     private bool[] eventCompletion;
-    public static bool messageOnScreen = false;
 
 
     void Awake()
     {
         ToastNotification.Show(tutorialMessages[0]);
-        messageOnScreen = true;
         eventCompletion = new bool[eventCount];
         for(int i = 0; i < eventCount; i++) {
             eventCompletion[i] = false;
@@ -46,14 +44,17 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     }
 
     public void OnEventRaised(int item) {
-        if(item == ToastHideID && !messageOnScreen) {
-            if(currentMessage < tutorialMessages.Length - 1)
-                currentMessage++;
-            ToastNotification.Show(tutorialMessages[currentMessage], 1000);
-            messageOnScreen = true;
+        if(item == ToastHideID) {
+            
         }else {
-            messageOnScreen = false;
-            ToastNotification.Hide();
+            
+            if(currentMessage < tutorialMessages.Length - 1 && item + 1== currentMessage) {
+                ToastNotification.Hide();
+                currentMessage++;
+                ToastNotification.Show(tutorialMessages[currentMessage], 1000);
+            }
+               
+
             eventCompletion[item] = true;
             if(isTutorialComplete()) {
                 ToastNotification.Show("Tutorial Complete!");
