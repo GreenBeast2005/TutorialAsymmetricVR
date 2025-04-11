@@ -13,7 +13,8 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
 
     void Awake()
     {
-        ToastNotification.Show("Testing Shizzle");
+        ToastNotification.Show("Welcome to the Tutorial!");
+        ToastNotification.Show("Let's start by getting you moving. Use WASD or the Arrow Keys.");
         eventCompletion = new bool[eventCount];
         for(int i = 0; i < eventCount; i++) {
             eventCompletion[i] = false;
