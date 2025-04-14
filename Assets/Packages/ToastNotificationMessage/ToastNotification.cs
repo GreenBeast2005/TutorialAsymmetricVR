@@ -111,6 +111,10 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 // When is completely hided, call Hide function to dismiss the message
                 Hide();
                 isHiding = false;
+                // When that message gets hidden fr, then we send an event to the main function
+                if(tutorialEvents != null) {
+                    tutorialEvents.Raise(TutorialManager.ToastHideID);
+                }
             }
         }
         // Show message process
@@ -345,9 +349,6 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
             }
                
         }
-        // if(tutorialEvents != null && !TutorialManager.messageOnScreen) {
-        //     tutorialEvents.Raise(TutorialManager.ToastHideID);
-        // }
     }
 
     #region Utilities Functions

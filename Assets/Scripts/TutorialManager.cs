@@ -44,14 +44,16 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     }
 
     public void OnEventRaised(int item) {
+        Debug.Log("Recieving Event: " + item);
         if(item == ToastHideID) {
-            
-        }else {
-            
-            if(currentMessage < tutorialMessages.Length - 1 && item + 1== currentMessage) {
-                ToastNotification.Hide();
+            if(currentMessage < tutorialMessages.Length - 1) {
                 currentMessage++;
                 ToastNotification.Show(tutorialMessages[currentMessage], 1000);
+            }
+        }else {
+            
+            if(item == currentMessage - 1) {
+                tutorialEvents.Raise(ToastHideID);
             }
                
 

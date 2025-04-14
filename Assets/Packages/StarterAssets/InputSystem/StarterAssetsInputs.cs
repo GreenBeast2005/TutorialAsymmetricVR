@@ -47,7 +47,7 @@ namespace StarterAssets
 		{
 			if(cursorInputForLook)
 			{
-				// tutorialEvents.Raise(lookEventID);
+				tutorialEvents.Raise(lookEventID);
 				LookInput(context.ReadValue<Vector2>());
 			}
 		}

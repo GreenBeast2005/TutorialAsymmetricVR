@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PanettoneGames.GenEvents;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Lightbug.GrabIt
@@ -10,13 +11,17 @@ public class GrabObjectProperties{
 	public bool m_useGravity = false;
 	public float m_drag = 10;
 	public float m_angularDrag = 10;
-	public RigidbodyConstraints m_constraints = RigidbodyConstraints.FreezeRotation;		
-
+	public RigidbodyConstraints m_constraints = RigidbodyConstraints.FreezeRotation;
+	
 }
 
 
 // [RequireComponent(typeof(PlayerInput))]
 public class GrabIt : MonoBehaviour {
+	[Header("Tutorial Stuff")]
+	public IntEvent tutorialEvents;
+	public int grabLookID = 3;
+	public int grabInteractID = 4;	
 
 	[Header("Input")]
 	[SerializeField] KeyCode m_rotatePitchPosKey = KeyCode.I;
@@ -103,7 +108,8 @@ public class GrabIt : MonoBehaviour {
 			{
 				Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
 				if(rb != null){							
-					Set( rb , hitInfo.distance);						
+					Set( rb , hitInfo.distance);
+					tutorialEvents.Raise(grabInteractID);						
 					m_grabbing = true;
 				}
 			}
@@ -220,11 +226,49 @@ public class GrabIt : MonoBehaviour {
 		// 	m_targetRB.AddTorque( m_transform.up * m_angularSpeed );
 		// }
 	}
-	
+	private Outline lastOutlined;
 	void FixedUpdate()
 	{
-		if(!m_grabbing)
+		
+		if(!m_grabbing) {
+			RaycastHit hitInfo;
+			if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
+			{
+				Outline outline = hitInfo.collider.GetComponent<Outline>();
+				if(outline != null){
+					if (outline != lastOutlined)
+					{
+						if (lastOutlined != null)
+						{
+							lastOutlined.enabled = false;
+						}
+
+						outline.enabled = true;
+						tutorialEvents.Raise(grabLookID);
+						lastOutlined = outline;
+					}							
+					outline.enabled = true;
+				}
+				else
+				{
+					// Hit something without an outline
+					if (lastOutlined != null)
+					{
+						lastOutlined.enabled = false;
+						lastOutlined = null;
+					}
+				}
+			}else {
+				// Raycast didn't hit anything
+				if (lastOutlined != null)
+				{
+					lastOutlined.enabled = false;
+					lastOutlined = null;
+				}
+			}
 			return;
+		}
+			
 		
 		if(!m_isHingeJoint)
 			Rotate();
