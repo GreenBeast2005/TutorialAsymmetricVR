@@ -11,9 +11,7 @@ namespace StarterAssets
 	{
 		[Header("Send Input as event to the TutorialManager")]
 		public IntEvent tutorialEvents;
-		public int moveEventID = 0;
-		public int lookEventID = 1;
-		public int grabEventID = 2;
+
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
@@ -37,8 +35,8 @@ namespace StarterAssets
         }
         public void OnMove(InputAction.CallbackContext context)
 		{
-
-			tutorialEvents.Raise(moveEventID);
+			if(TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.DirectionInputEvent)
+				tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.DirectionInputEvent);
 			
 			MoveInput(context.ReadValue<Vector2>());
 		}
@@ -47,7 +45,8 @@ namespace StarterAssets
 		{
 			if(cursorInputForLook)
 			{
-				tutorialEvents.Raise(lookEventID);
+				if(TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.MouseInputEvent)
+					tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.MouseInputEvent);
 				LookInput(context.ReadValue<Vector2>());
 			}
 		}

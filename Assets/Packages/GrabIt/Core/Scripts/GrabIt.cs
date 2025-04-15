@@ -20,8 +20,6 @@ public class GrabObjectProperties{
 public class GrabIt : MonoBehaviour {
 	[Header("Tutorial Stuff")]
 	public IntEvent tutorialEvents;
-	public int grabLookID = 3;
-	public int grabInteractID = 4;	
 
 	[Header("Input")]
 	[SerializeField] KeyCode m_rotatePitchPosKey = KeyCode.I;
@@ -109,7 +107,8 @@ public class GrabIt : MonoBehaviour {
 				Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
 				if(rb != null){							
 					Set( rb , hitInfo.distance);
-					tutorialEvents.Raise(grabInteractID);						
+					if(TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.GrabObjectEvent)
+						tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.GrabObjectEvent);						
 					m_grabbing = true;
 				}
 			}
@@ -244,7 +243,8 @@ public class GrabIt : MonoBehaviour {
 						}
 
 						outline.enabled = true;
-						tutorialEvents.Raise(grabLookID);
+						if(TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.GazeObjectEvent)
+							tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.GazeObjectEvent);
 						lastOutlined = outline;
 					}							
 					outline.enabled = true;

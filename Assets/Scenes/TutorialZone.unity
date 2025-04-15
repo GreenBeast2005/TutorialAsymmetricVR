@@ -665,14 +665,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82f5eb494af680e47a3a0428dc3f4a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialEvents: {fileID: 11400000, guid: 77a6048f173686746a59883c60aa7f08, type: 2}
-  eventCount: 6
   tutorialMessages:
   - Welcome to the Tutorial!
   - Lets get you moving, try using WASD or the Arrow Keys to walk around.
   - Awesome now use the mouse to look around the room!
   - Now go look at one of those black cubes.
   - Now left click with the mouse to pick up the cube.
+  tutorialEvents: {fileID: 11400000, guid: 77a6048f173686746a59883c60aa7f08, type: 2}
+  eventCount: 6
 --- !u!1 &119044895
 GameObject:
   m_ObjectHideFlags: 0
@@ -2521,8 +2521,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialEvents: {fileID: 11400000, guid: 77a6048f173686746a59883c60aa7f08, type: 2}
-  grabLookID: 3
-  grabInteractID: 4
+  grabLookID: 0
+  grabInteractID: 0
   m_rotatePitchPosKey: 105
   m_rotatePitchNegKey: 107
   m_rotateYawPosKey: 108
