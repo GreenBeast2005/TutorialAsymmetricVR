@@ -14,9 +14,10 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     public enum TutorialEventIDs {
         DirectionInputEvent = 1,
         MouseInputEvent = 2,
-        GazeObjectEvent = 3,
-        GrabObjectEvent = 4,
-        Finished = 6
+        GazeObjectEvent = 5,
+        GrabObjectEvent = 7,
+        ObjectOnTableEvent = 8,
+        Finished = 9
     }
     public static TutorialEventIDs currentEvent;
     //Here we associate each eventID with a message to prompt you to do that action.
@@ -42,6 +43,8 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
             case TutorialEventIDs.GazeObjectEvent:
                 return TutorialEventIDs.GrabObjectEvent;
             case TutorialEventIDs.GrabObjectEvent:
+                return TutorialEventIDs.ObjectOnTableEvent;
+            case TutorialEventIDs.ObjectOnTableEvent:
                 return TutorialEventIDs.Finished;
 
             default:
@@ -71,12 +74,15 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
 
     void Awake()
     {
-        ToastNotification.Show(tutorialMessages[0]);
+        
 
         eventCompletion = new bool[eventCount];
         for(int i = 0; i < eventCount; i++) {
             eventCompletion[i] = false;
         }
+
+        ToastNotification.Show(tutorialMessages[0]);
+        eventCompletion[0] = true;
 
         currentEvent = TutorialEventIDs.DirectionInputEvent;
     }
@@ -102,24 +108,25 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     public void OnEventRaised(int item) {
         Debug.Log("Recieving Event: " + item + "   CurrentMessage(" + currentMessage + ")" + "    currentEvent(" + currentEvent + ")");
 
-        if(item == ToastHideID) {
+        if(item == ToastHideID && currentEvent != TutorialEventIDs.Finished) {
             if(currentMessage < tutorialMessages.Length - 1) {
                 currentMessage++;
-                ToastNotification.Show(tutorialMessages[currentMessage], 1000);
+                if(requirePlayerInput(currentMessage)) {
+                    ToastNotification.Show(tutorialMessages[currentMessage], 1000);
+                }else {
+                    ToastNotification.Show(tutorialMessages[currentMessage], 5);
+                    eventCompletion[currentMessage] = true;
+                }
+                
             }
-
-        }else {
-            
-            if(requirePlayerInput(currentMessage) && !eventCompletion[item]) {
-                currentEvent = GetNextEvent(currentEvent);
-                tutorialEvents.Raise(ToastHideID);
-            }
-               
-
+        }else if(requirePlayerInput(currentMessage)){
+            currentEvent = GetNextEvent(currentEvent);
+            tutorialEvents.Raise(ToastHideID);
             eventCompletion[item] = true;
-            if(isTutorialComplete()) {
-                ToastNotification.Show("Tutorial Complete!");
-            }
+        }
+
+        if(isTutorialComplete()) {
+            ToastNotification.Show("Tutorial Complete!");
         }
         
     }
