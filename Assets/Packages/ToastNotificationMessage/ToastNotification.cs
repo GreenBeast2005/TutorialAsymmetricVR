@@ -112,7 +112,7 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 Hide();
                 isHiding = false;
                 // When that message gets hidden fr, then we send an event to the main function
-                if(tutorialEvents != null) {
+                if(tutorialEvents != null && TutorialManager.currentEvent != TutorialManager.TutorialEventIDs.Finished) {
                     tutorialEvents.Raise(TutorialManager.ToastHideID);
                 }
             }

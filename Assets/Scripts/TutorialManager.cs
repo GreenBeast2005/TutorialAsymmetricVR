@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PanettoneGames.GenEvents;
 using System;
+using UnityEditor.EditorTools;
 
 public class TutorialManager : MonoBehaviour, IGameEventListener<int>
 {
@@ -21,7 +22,10 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     }
     public static TutorialEventIDs currentEvent;
     //Here we associate each eventID with a message to prompt you to do that action.
+    [Header("Hover for ToolTip")]
+    [Tooltip("You have to change the enum to match with coresponding message element. For example, the direction input event is 1, and it goes with element 1.")]
     public string[] tutorialMessages;
+    public int messageTime = 5;
     private string tutorialMessageWithEvent(TutorialEventIDs id) {
         return id switch{
             TutorialEventIDs.DirectionInputEvent => "Lets get you moving, try using WASD or the Arrow Keys!",
@@ -45,6 +49,8 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
             case TutorialEventIDs.GrabObjectEvent:
                 return TutorialEventIDs.ObjectOnTableEvent;
             case TutorialEventIDs.ObjectOnTableEvent:
+                return TutorialEventIDs.ObjectOnTableEvent;
+            case TutorialEventIDs.Finished:
                 return TutorialEventIDs.Finished;
 
             default:
@@ -56,7 +62,8 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
         if( currentMessage == (int)TutorialEventIDs.DirectionInputEvent ||
             currentMessage == (int)TutorialEventIDs.MouseInputEvent || 
             currentMessage == (int)TutorialEventIDs.GazeObjectEvent ||
-            currentMessage == (int)TutorialEventIDs.GrabObjectEvent){
+            currentMessage == (int)TutorialEventIDs.GrabObjectEvent ||
+            currentMessage == (int)TutorialEventIDs.ObjectOnTableEvent){
                 return true;
         }
         return false;
@@ -81,7 +88,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
             eventCompletion[i] = false;
         }
 
-        ToastNotification.Show(tutorialMessages[0]);
+        ToastNotification.Show(tutorialMessages[0], messageTime);
         eventCompletion[0] = true;
 
         currentEvent = TutorialEventIDs.DirectionInputEvent;
@@ -108,14 +115,14 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     public void OnEventRaised(int item) {
         Debug.Log("Recieving Event: " + item + "   CurrentMessage(" + currentMessage + ")" + "    currentEvent(" + currentEvent + ")");
 
-        if(item == ToastHideID && currentEvent != TutorialEventIDs.Finished) {
-            if(currentMessage < tutorialMessages.Length - 1) {
+        if(item == ToastHideID) {
+            if(currentMessage < eventCount) {
+                eventCompletion[currentMessage] = true;
                 currentMessage++;
                 if(requirePlayerInput(currentMessage)) {
                     ToastNotification.Show(tutorialMessages[currentMessage], 1000);
                 }else {
-                    ToastNotification.Show(tutorialMessages[currentMessage], 5);
-                    eventCompletion[currentMessage] = true;
+                    ToastNotification.Show(tutorialMessages[currentMessage], messageTime);
                 }
                 
             }
@@ -126,7 +133,8 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
         }
 
         if(isTutorialComplete()) {
-            ToastNotification.Show("Tutorial Complete!");
+            currentEvent = TutorialEventIDs.Finished;
+            ToastNotification.Show(tutorialMessages[eventCount], messageTime+10);
         }
         
     }
