@@ -35,7 +35,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
             _ => "Unknown tutorial step."
         };
     }
-    // Function that returns the next tutorial step
+    // Function that returns the next tutorial step, if more events are added this has to be changed.
     private TutorialEventIDs GetNextEvent(TutorialEventIDs currentStep)
     {
         switch (currentStep)
@@ -57,7 +57,8 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
                 throw new System.Exception("Unknown tutorial step.");
         }
     }
-    //This is here because I want to have capacity for messages between these input prompts.
+    //This is here because I want to have capacity for messages between these input prompts, this also has to be changed if 
+    // New input events are added.
     private bool requirePlayerInput(int currentMessage) {
         if( currentMessage == (int)TutorialEventIDs.DirectionInputEvent ||
             currentMessage == (int)TutorialEventIDs.MouseInputEvent || 
@@ -81,8 +82,6 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
 
     void Awake()
     {
-        
-
         eventCompletion = new bool[eventCount];
         for(int i = 0; i < eventCount; i++) {
             eventCompletion[i] = false;
@@ -113,8 +112,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     }
 
     public void OnEventRaised(int item) {
-        Debug.Log("Recieving Event: " + item + "   CurrentMessage(" + currentMessage + ")" + "    currentEvent(" + currentEvent + ")");
-
+        // If the event is the toastHidID that means its a message that is being hidden
         if(item == ToastHideID) {
             if(currentMessage < eventCount) {
                 eventCompletion[currentMessage] = true;
@@ -126,12 +124,15 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
                 }
                 
             }
+        // Otherwise we check if this id requires player input.
         }else if(requirePlayerInput(currentMessage)){
             currentEvent = GetNextEvent(currentEvent);
             tutorialEvents.Raise(ToastHideID);
             eventCompletion[item] = true;
         }
 
+        // Once the tutorial is complete we display the final message and set the current even to finished so no more events
+        // are sent.
         if(isTutorialComplete()) {
             currentEvent = TutorialEventIDs.Finished;
             ToastNotification.Show(tutorialMessages[eventCount], messageTime+10);

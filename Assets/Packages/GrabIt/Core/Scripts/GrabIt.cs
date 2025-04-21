@@ -18,14 +18,17 @@ public class GrabObjectProperties{
 
 // [RequireComponent(typeof(PlayerInput))]
 public class GrabIt : MonoBehaviour {
+	
+	// This is how the tutorial Manager, and all the various parts of the tutorial talk to eachother.
 	[Header("Tutorial Stuff")]
 	public IntEvent tutorialEvents;
 
-	[Header("Input")]
-	[SerializeField] KeyCode m_rotatePitchPosKey = KeyCode.I;
-	[SerializeField] KeyCode m_rotatePitchNegKey = KeyCode.K;
-	[SerializeField] KeyCode m_rotateYawPosKey = KeyCode.L;
-	[SerializeField] KeyCode m_rotateYawNegKey = KeyCode.J;
+	// Rotating Objects is disabled so im going to comment this out.
+	// [Header("Input")]
+	// [SerializeField] KeyCode m_rotatePitchPosKey = KeyCode.I;
+	// [SerializeField] KeyCode m_rotatePitchNegKey = KeyCode.K;
+	// [SerializeField] KeyCode m_rotateYawPosKey = KeyCode.L;
+	// [SerializeField] KeyCode m_rotateYawNegKey = KeyCode.J;
 
 	[Header("Grab properties")]
 
@@ -91,10 +94,13 @@ public class GrabIt : MonoBehaviour {
 		m_lineRenderer = GetComponent<LineRenderer>();
 	}
 
-	public void OnInteract() {
-		Debug.Log("this should be called.");
-	}
+	// public void OnInteract() {
+	// 	Debug.Log("this should be called.");
+	// }
 
+	// On the PlayerCaspsule, the Player Input component calls this function via an event call
+	// This is what allows the objects to be picked up.
+	// Click once to grab, click again to drop
 	public void OnGrab(InputAction.CallbackContext context)
 	{
 		if(m_grabbing){				
@@ -115,6 +121,7 @@ public class GrabIt : MonoBehaviour {
 		}
 	}
 
+	// When you press the toss button it tosses the object.
 	public void OnToss(InputAction.CallbackContext context)
 	{
 		if (m_grabbing){
@@ -122,6 +129,7 @@ public class GrabIt : MonoBehaviour {
 		}
 	}
 
+	// Scrolling allows you to move the object.
 	public void OnScroll(InputAction.CallbackContext context)
 	{
 		if(m_grabbing) {
@@ -225,6 +233,9 @@ public class GrabIt : MonoBehaviour {
 		// 	m_targetRB.AddTorque( m_transform.up * m_angularSpeed );
 		// }
 	}
+
+	// Here is where the Grab It and quick outline come together. When you look at an object it checks
+	// If it has an outline scipt and if it does it turns it on, turning it off when you look away
 	private Outline lastOutlined;
 	void FixedUpdate()
 	{

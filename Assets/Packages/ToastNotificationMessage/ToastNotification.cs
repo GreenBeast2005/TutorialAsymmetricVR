@@ -18,6 +18,7 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     // The prefab used to display messages. Please choose one prefab on root folder. You can also create your own message prefab
     public Transform _messagePrefab;
+    // This is how the tutorial Manager, and all the various parts of the tutorial talk to eachother.
     [Header("Here so that the TutorialManager knows when notifications are hidden")]
     public IntEvent _tutorialEvents;
     public static IntEvent tutorialEvents;
@@ -111,7 +112,9 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 // When is completely hided, call Hide function to dismiss the message
                 Hide();
                 isHiding = false;
-                // When that message gets hidden fr, then we send an event to the main function
+
+                // This is where the message is actually fully hidden, so if the tutorial isnt finished, when the notification
+                // is hidden we raise the event.
                 if(tutorialEvents != null && TutorialManager.currentEvent != TutorialManager.TutorialEventIDs.Finished) {
                     tutorialEvents.Raise(TutorialManager.ToastHideID);
                 }
