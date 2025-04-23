@@ -48,8 +48,12 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
                 return TutorialEventIDs.GrabObjectEvent;
             case TutorialEventIDs.GrabObjectEvent:
                 return TutorialEventIDs.ObjectOnTableEvent;
+            
+            //Notice that at the last event it just loops on itself, this is intential
             case TutorialEventIDs.ObjectOnTableEvent:
                 return TutorialEventIDs.ObjectOnTableEvent;
+
+            //As I have it written the only way to set the current event to finished is to manually set it.
             case TutorialEventIDs.Finished:
                 return TutorialEventIDs.Finished;
 
@@ -58,7 +62,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
         }
     }
     //This is here because I want to have capacity for messages between these input prompts, this also has to be changed if 
-    // New input events are added.
+    //New input events are added.
     private bool requirePlayerInput(int currentMessage) {
         if( currentMessage == (int)TutorialEventIDs.DirectionInputEvent ||
             currentMessage == (int)TutorialEventIDs.MouseInputEvent || 
@@ -77,6 +81,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
     [Header("This is for the Notifications, so that this knows when a message is hidden and can respond")]
     public static int ToastHideID = 1000;
 
+    //This is wha gets checked to see if the tutorial is complete.
     private bool[] eventCompletion;
 
 
