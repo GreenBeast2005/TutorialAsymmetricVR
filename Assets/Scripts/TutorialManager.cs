@@ -116,12 +116,15 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
         return true;
     }
 
+    //This the function that gets called when in other scripts you call tutorialEvents.raise(int)
     public void OnEventRaised(int item) {
         // If the event is the toastHidID that means its a message that is being hidden
         if(item == ToastHideID) {
+            // Move to the next message
             if(currentMessage < eventCount) {
                 eventCompletion[currentMessage] = true;
                 currentMessage++;
+                // If the next message requires the player to something, we want it to stay up for a while, otherwise it disapears after messageTime seconds
                 if(requirePlayerInput(currentMessage)) {
                     ToastNotification.Show(tutorialMessages[currentMessage], 1000);
                 }else {
@@ -131,6 +134,7 @@ public class TutorialManager : MonoBehaviour, IGameEventListener<int>
             }
         // Otherwise we check if this id requires player input.
         }else if(requirePlayerInput(currentMessage)){
+            // Move to next input event event
             currentEvent = GetNextEvent(currentEvent);
             tutorialEvents.Raise(ToastHideID);
             eventCompletion[item] = true;
