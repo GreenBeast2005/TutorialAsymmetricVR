@@ -65,8 +65,8 @@ public class GrabIt : MonoBehaviour {
 	GrabObjectProperties m_defaultProperties = new GrabObjectProperties();
 
 	[Header("Layers")]
-	[SerializeField]
-	LayerMask m_collisionMask;
+	[SerializeField] LayerMask m_collisionMask;
+	[SerializeField] LayerMask m_mindMapNodeMask;
 
 	
 
@@ -115,6 +115,17 @@ public class GrabIt : MonoBehaviour {
 					Set( rb , hitInfo.distance);
 					if(TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.GrabObjectEvent)
 						tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.GrabObjectEvent);						
+					m_grabbing = true;
+				}
+			}else if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_mindMapNodeMask )) {
+				Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
+				if(rb != null){							
+					Set( rb , hitInfo.distance);
+
+					// Here we raise a different event
+					// if(TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.GrabObjectEvent)
+					// 	tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.GrabObjectEvent);	
+
 					m_grabbing = true;
 				}
 			}
@@ -245,7 +256,7 @@ public class GrabIt : MonoBehaviour {
 		
 		if(!m_grabbing) {
 			RaycastHit hitInfo;
-			if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ))
+			if(Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_collisionMask ) || Physics.Raycast(m_transform.position , m_transform.forward , out hitInfo , m_grabMaxDistance , m_mindMapNodeMask ))
 			{
 				Outline outline = hitInfo.collider.GetComponent<Outline>();
 				if(outline != null){
