@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class MindMapManager : MonoBehaviour, IGameEventListener<GameObject>
 {
+    private List<List<GameObject>> graph;
+
+    void Awake()
+    {
+        graph = new List<List<GameObject>>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +25,7 @@ public class MindMapManager : MonoBehaviour, IGameEventListener<GameObject>
         
     }
 
+// Need to make gameobject, gameobject event.
     public void OnEventRaised(GameObject item)
     {
         throw new System.NotImplementedException();
