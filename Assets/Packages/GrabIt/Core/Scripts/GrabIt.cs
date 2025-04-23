@@ -194,6 +194,9 @@ public class GrabIt : MonoBehaviour {
 		m_targetRB.angularDrag = m_defaultProperties.m_angularDrag;
 		m_targetRB.constraints = m_defaultProperties.m_constraints;
 		
+		// This only needs to be done for the mind maping nodes.
+		m_targetRB.velocity = Vector3.zero;
+		
 		m_targetRB = null;
 
 		m_hitPointObject.transform.SetParent(null);
