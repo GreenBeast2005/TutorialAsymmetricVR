@@ -1,4 +1,5 @@
-﻿using PanettoneGames.GenEvents;
+﻿using System;
+using PanettoneGames.GenEvents;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -45,7 +46,7 @@ public class GrabIt : MonoBehaviour {
 	float m_grabMaxDistance = 10;
 
 	[SerializeField]
-	[Range(1,10)]
+	[Range(0,10)]
 	float m_scrollWheelSpeed = 5;
 
 	[SerializeField]
@@ -144,9 +145,10 @@ public class GrabIt : MonoBehaviour {
 	public void OnScroll(InputAction.CallbackContext context)
 	{
 		if(m_grabbing) {
-			float rawScrollValue = Mathf.Sign(context.ReadValue<float>());
+			float rawScrollValue = Math.Clamp(context.ReadValue<float>(), -2.0f, 2.0f);
+			Debug.Log(rawScrollValue);
 
-			m_targetDistance += rawScrollValue * m_scrollWheelSpeed;			
+			m_targetDistance += (rawScrollValue * m_scrollWheelSpeed);			
 			m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
 		}
 	}

@@ -2758,7 +2758,7 @@ MonoBehaviour:
   m_grabSpeed: 7
   m_grabMinDistance: 1
   m_grabMaxDistance: 5
-  m_scrollWheelSpeed: 5
+  m_scrollWheelSpeed: 0.2
   m_angularSpeed: 300
   m_impulseMagnitude: 25
   m_grabProperties:
@@ -3292,7 +3292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mindMapEvent: {fileID: 11400000, guid: c5cffee239cec2943b10fe5f26ad8834, type: 2}
-  connectionPrefab: {fileID: 877884622731156710, guid: ffe2b306876a45a4196bff408c1b99a3,
+  connectionPrefab: {fileID: 6367602590594287258, guid: ffe2b306876a45a4196bff408c1b99a3,
     type: 3}
 --- !u!4 &1114636577
 Transform:

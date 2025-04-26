@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -9,14 +10,14 @@ public class MindMapManager : MonoBehaviour, IDualGameEventListener<GameObject, 
 {
     public DualGameObjectEvent mindMapEvent;
     public GameObject connectionPrefab;
-    private List<GameObject> connections;
+    private Dictionary<(Transform, Transform), GameObject> connections;
     private Dictionary<GameObject, List<GameObject>> map;
 
 
     void Awake()
     {
         map = new Dictionary<GameObject, List<GameObject>>();
-        connections = new List<GameObject>();
+        connections = new Dictionary<(Transform, Transform), GameObject>();
     }
 
     void OnEnable()
@@ -40,9 +41,32 @@ public class MindMapManager : MonoBehaviour, IDualGameEventListener<GameObject, 
         
     }
 
-// Need to make gameobject, gameobject event.
+    
     public void OnEventRaised(GameObject item1, GameObject item2)
     {
+        // if(map.ContainsKey(item2) && map[item2].Contains(item1)) {
+        //     return;
+        // }
+
+        if(map.ContainsKey(item1) && map[item1].Contains(item2)) {
+            Debug.Log("Destroying Connection");
+
+            map[item1].Remove(item2);
+            Destroy(connections[(item1.transform, item2.transform)]);
+            connections[(item1.transform, item2.transform)] = null;
+            return;
+        }
+
+        // if(map.ContainsKey(item2) && map[item2].Contains(item1)) {
+        //     Debug.Log("Destroying Connection");
+
+        //     map[item2].Remove(item1);
+        //     Destroy(connections[(item2.transform, item1.transform)]);
+        //     connections[(item2.transform, item1.transform)] = null;
+        //     return;
+        // }
+
+
         // Check if the key exists in the dictionary
         if (!map.ContainsKey(item1))
         {
@@ -57,11 +81,12 @@ public class MindMapManager : MonoBehaviour, IDualGameEventListener<GameObject, 
         // Need to figure out this connection thing.
         GameObject newLine = Instantiate<GameObject>(connectionPrefab);
 
-        Spline spline = newLine.GetComponent<Spline>();
-        spline.InsertNode(1, new SplineNode(item1.transform.position, UnityEngine.Vector3.zero));
-        spline.InsertNode(2, new SplineNode(item2.transform.position, UnityEngine.Vector3.zero));
+        MindMapConnection line = newLine.GetComponent<MindMapConnection>();
+        line.pointA = item1.transform;
+        line.pointB = item2.transform;
 
-        connections.Add(newLine);
+        connections[(item1.transform, item2.transform)] = newLine;
+        Debug.Log("Creating Connecton");
 
         foreach (var kvp in map)
         {
