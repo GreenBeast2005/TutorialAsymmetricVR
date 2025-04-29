@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 using PanettoneGames.GenEvents;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+
+
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -29,13 +33,15 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputAction.CallbackContext context)
 		{
-			// This is where the move event is sent to the tutorial manager. To keep it from spamming events, the tutorial manager
-			// has to be looking for this specific event. And all the event id's are stored in the tutorial manager, to make
-			// sure you dont have to be running all over the place chaning ids.
-			if(tutorialEvents != null && TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.DirectionInputEvent)
-				tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.DirectionInputEvent);
-			
-			MoveInput(context.ReadValue<Vector2>());
+			if(cursorLocked) {
+				// This is where the move event is sent to the tutorial manager. To keep it from spamming events, the tutorial manager
+				// has to be looking for this specific event. And all the event id's are stored in the tutorial manager, to make
+				// sure you dont have to be running all over the place chaning ids.
+				if(tutorialEvents != null && TutorialManager.currentEvent == TutorialManager.TutorialEventIDs.DirectionInputEvent)
+					tutorialEvents.Raise((int)TutorialManager.TutorialEventIDs.DirectionInputEvent);
+				
+				MoveInput(context.ReadValue<Vector2>());
+			}
 		}
 
 		public void OnLook(InputAction.CallbackContext context)
@@ -51,9 +57,43 @@ namespace StarterAssets
 			}
 		}
 
+		public bool IsPointingAtUI()
+		{
+			PointerEventData pointerData = new PointerEventData(EventSystem.current)
+			{
+				position = new Vector2(Screen.width / 2, Screen.height / 2) // Since cursor is locked, assume center
+			};
+
+			List<RaycastResult> results = new List<RaycastResult>();
+			EventSystem.current.RaycastAll(pointerData, results);
+
+			return results.Count > 0;
+		}
+
+
+		//Used to lock and unlock the cursor when looking at UI elements.
+		public void OnGrab(InputAction.CallbackContext context) {
+			 // Unlock cursor if user is clicking on an InputField or other UI
+			if (IsPointingAtUI())
+			{
+				SetCursorState(false);
+			}
+
+			if (!IsPointingAtUI())
+			{
+				SetCursorState(true);
+			}
+		}
+
+		//Closes ui stuff.
+		public void OnEnter(InputAction.CallbackContext context) {
+			SetCursorState(true);
+		}
+
 		public void OnJump(InputAction.CallbackContext context)
 		{
-			JumpInput(true);
+			if(cursorLocked)
+				JumpInput(true);
 		}
 
 		// Spriting does not disable automatically. I dont really think this program should require
@@ -92,12 +132,14 @@ namespace StarterAssets
 		
 		private void OnApplicationFocus(bool hasFocus)
 		{
-			// SetCursorState(cursorLocked);
+			SetCursorState(cursorLocked);
 		}
 
 		private void SetCursorState(bool newState)
 		{
-			// Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+			Cursor.visible = !newState;
+			cursorLocked = newState;
 		}
 	}
 	
