@@ -92,8 +92,6 @@ namespace StarterAssets
 			}
 
 			// Unlock cursor if user is clicking on an InputField or other UI
-			if (!context.performed) return;
-
 			bool isHoveringUI = IsPointingAtUI();
 
 			SetCursorState(!isHoveringUI); // Lock if not over UI, unlock if over UI
