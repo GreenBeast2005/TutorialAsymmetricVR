@@ -46,6 +46,7 @@ namespace StarterAssets
 
 		public void OnLook(InputAction.CallbackContext context)
 		{
+			// if(!cursorLocked) return; 
 			// This is where the cursor look around event is sent to the tutorial manager. To keep it from spamming events, the tutorial manager
 			// has to be looking for this specific event. And all the event id's are stored in the tutorial manager, to make
 			// sure you dont have to be running all over the place chaning ids.
@@ -61,28 +62,41 @@ namespace StarterAssets
 		{
 			PointerEventData pointerData = new PointerEventData(EventSystem.current)
 			{
-				position = new Vector2(Screen.width / 2, Screen.height / 2) // Since cursor is locked, assume center
+				position = new Vector2(Screen.width / 2, Screen.height / 2)
 			};
 
 			List<RaycastResult> results = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointerData, results);
 
-			return results.Count > 0;
+			// Return true only if the topmost hit is a valid UI element
+			return results.Count > 0 && results[0].gameObject != null;
 		}
+
 
 
 		//Used to lock and unlock the cursor when looking at UI elements.
 		public void OnGrab(InputAction.CallbackContext context) {
-			 // Unlock cursor if user is clicking on an InputField or other UI
-			if (IsPointingAtUI())
+			// Prevents this function from being called multiple times.
+			if (!context.performed) return;
+			
+			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+			// This is used to press the button on the wall that spawns the mind nodes.
+			if (Physics.Raycast(ray, out RaycastHit hit, 5f))
 			{
-				SetCursorState(false);
+				// Check for a specific tag or component if needed
+				if (hit.collider.GetComponent<PrefabSpawn>() != null)
+				{
+					hit.collider.GetComponent<PrefabSpawn>().SpawnPrefab();
+				}
 			}
 
-			if (!IsPointingAtUI())
-			{
-				SetCursorState(true);
-			}
+			// Unlock cursor if user is clicking on an InputField or other UI
+			if (!context.performed) return;
+
+			bool isHoveringUI = IsPointingAtUI();
+
+			SetCursorState(!isHoveringUI); // Lock if not over UI, unlock if over UI
 		}
 
 		//Closes ui stuff.

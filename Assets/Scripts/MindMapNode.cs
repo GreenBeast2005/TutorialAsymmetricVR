@@ -7,18 +7,8 @@ public class MindMapNode : MonoBehaviour
 {
     public LayerMask targetLayer;
     public DualGameObjectEvent mindMapEvent;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Sends an event to the mind map manager that a connection has been created when it touches another MindNode.
     void OnTriggerEnter(Collider other)
     {
         if((targetLayer.value & (1 << other.gameObject.layer)) != 0) {

@@ -15,6 +15,7 @@ public class MindMapConnection : MonoBehaviour
 
     }
 
+    // Maintains the rendered lines position so that the connection will move with the nodes as you move it around.
     void Update()
     {
         if (pointA != null && pointB != null)

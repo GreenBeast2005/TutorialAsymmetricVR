@@ -16,6 +16,9 @@ public class MindMapManager : MonoBehaviour, IDualGameEventListener<GameObject, 
 
     void Awake()
     {
+        // The nodes get stored in a dictionary so that connectsions can be quickly determined.
+        // Once it gets time to start saving stuff, we probably dont want all the data of the gameobject,
+        // Just position, text, and other connections, maybe color too at some point
         map = new Dictionary<GameObject, List<GameObject>>();
         connections = new Dictionary<(Transform, Transform), GameObject>();
     }
@@ -29,43 +32,18 @@ public class MindMapManager : MonoBehaviour, IDualGameEventListener<GameObject, 
         mindMapEvent.UnregisterListener(this);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    
+    // This gets called when 2 mind nodes are touched together, it creates a line connection between the 2 nodes, it goes both ways
+    // So technically there are 2 lines per set of nodes, but that shouldnt affect performance too much I hope.
     public void OnEventRaised(GameObject item1, GameObject item2)
     {
-        // if(map.ContainsKey(item2) && map[item2].Contains(item1)) {
-        //     return;
-        // }
-
         if(map.ContainsKey(item1) && map[item1].Contains(item2)) {
-            Debug.Log("Destroying Connection");
+            // Debug.Log("Destroying Connection");
 
             map[item1].Remove(item2);
             Destroy(connections[(item1.transform, item2.transform)]);
             connections[(item1.transform, item2.transform)] = null;
             return;
         }
-
-        // if(map.ContainsKey(item2) && map[item2].Contains(item1)) {
-        //     Debug.Log("Destroying Connection");
-
-        //     map[item2].Remove(item1);
-        //     Destroy(connections[(item2.transform, item1.transform)]);
-        //     connections[(item2.transform, item1.transform)] = null;
-        //     return;
-        // }
-
 
         // Check if the key exists in the dictionary
         if (!map.ContainsKey(item1))
@@ -86,11 +64,11 @@ public class MindMapManager : MonoBehaviour, IDualGameEventListener<GameObject, 
         line.pointB = item2.transform;
 
         connections[(item1.transform, item2.transform)] = newLine;
-        Debug.Log("Creating Connecton");
+        // Debug.Log("Creating Connecton");
 
-        foreach (var kvp in map)
-        {
-            Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
-        }
+        // foreach (var kvp in map)
+        // {
+        //     Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
+        // }
     }
 }
