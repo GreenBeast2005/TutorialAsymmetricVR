@@ -208,7 +208,11 @@ public class GrabIt : MonoBehaviour {
 		m_targetRB.constraints = m_defaultProperties.m_constraints;
 		
 		// This only needs to be done for the mind maping nodes.
-		m_targetRB.velocity = Vector3.zero;
+		if((m_mindMapNodeMask.value & (1 << m_targetRB.gameObject.layer)) != 0) {
+            m_targetRB.velocity = Vector3.zero;
+        }
+		
+		
 		
 		m_targetRB = null;
 
