@@ -146,7 +146,7 @@ public class GrabIt : MonoBehaviour {
 	{
 		if(m_grabbing) {
 			float rawScrollValue = Math.Clamp(context.ReadValue<float>(), -2.0f, 2.0f);
-			Debug.Log(rawScrollValue);
+			// Debug.Log(rawScrollValue);
 
 			m_targetDistance += (rawScrollValue * m_scrollWheelSpeed);			
 			m_targetDistance = Mathf.Clamp(m_targetDistance , m_grabMinDistance , m_grabMaxDistance);
